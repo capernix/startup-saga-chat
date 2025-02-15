@@ -2,8 +2,10 @@
 import { MessageSquare, Sparkles, Clock, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
   const features = [
     {
       icon: <MessageSquare className="w-6 h-6" />,
@@ -39,7 +41,11 @@ const Index = () => {
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
               Navigate your solo founder journey with an intelligent chat companion powered by advanced AI
             </p>
-            <Button size="lg" className="hover-lift">
+            <Button 
+              size="lg" 
+              className="hover-lift"
+              onClick={() => navigate("/dashboard")}
+            >
               Start Chatting
             </Button>
           </div>
@@ -85,7 +91,12 @@ const Index = () => {
                   Our AI understands the unique challenges of solo founders and provides
                   tailored guidance for your startup journey.
                 </p>
-                <Button variant="secondary" size="lg" className="hover-lift">
+                <Button 
+                  variant="secondary" 
+                  size="lg" 
+                  className="hover-lift"
+                  onClick={() => navigate("/dashboard")}
+                >
                   Try Demo
                 </Button>
               </div>
@@ -123,6 +134,7 @@ const Index = () => {
             variant="secondary"
             size="lg"
             className="hover-lift"
+            onClick={() => navigate("/dashboard")}
           >
             Get Started Now
           </Button>
