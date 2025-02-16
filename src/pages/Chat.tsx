@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { DashboardSidebar } from "@/components/DashboardSidebar";
+import { DashboardContent } from "@/components/DashboardContent";
 
 export default function Chat() {
     const { messages, input, handleInputChange, handleSubmit } = useChat();
@@ -24,7 +27,7 @@ export default function Chat() {
         }
     };
 
-    return (
+    const ChatContent = (
         <div className="flex flex-col h-full">
             <Card className="flex-grow flex flex-col">
                 <CardHeader>
@@ -34,16 +37,16 @@ export default function Chat() {
                     <ScrollArea className="h-full">
                         {messages.map(m => (
                             <div key={m.id} className={`mb-4 ${m.role === 'user' ? 'text-right' : 'text-left'}`}>
-                <span className={`inline-block p-2 rounded-lg ${m.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
-                  {m.content}
-                </span>
+                                <span className={`inline-block p-2 rounded-lg ${m.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}>
+                                    {m.content}
+                                </span>
                             </div>
                         ))}
                         {isTyping && (
                             <div className="text-left">
-                <span className="inline-block p-2 rounded-lg bg-secondary text-secondary-foreground">
-                  AI is typing...
-                </span>
+                                <span className="inline-block p-2 rounded-lg bg-secondary text-secondary-foreground">
+                                    AI is typing...
+                                </span>
                             </div>
                         )}
                     </ScrollArea>
@@ -61,5 +64,16 @@ export default function Chat() {
                 </CardFooter>
             </Card>
         </div>
+    );
+
+    return (
+        <SidebarProvider>
+            <div className="min-h-screen flex w-full">
+                <DashboardSidebar />
+                <DashboardContent>
+                    {ChatContent}
+                </DashboardContent>
+            </div>
+        </SidebarProvider>
     );
 }
