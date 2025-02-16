@@ -2,7 +2,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useChat } from 'ai/react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,17 +10,62 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { DashboardContent } from "@/components/DashboardContent";
 
+type Message = {
+    id: string;
+    content: string;
+    role: 'user' | 'assistant';
+};
+
 export default function Chat() {
-    const { messages, input, handleInputChange, handleSubmit } = useChat();
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [input, setInput] = useState('');
     const [isTyping, setIsTyping] = useState(false);
 
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInput(e.target.value);
+    };
+
+    const generateResponse = async (userMessage: string) => {
+        // This is a mock response - replace with actual AI integration later
+        return new Promise<string>((resolve) => {
+            setTimeout(() => {
+                const responses = [
+                    "I understand your question. Let me help you with that.",
+                    "That's an interesting point. Here's what I think...",
+                    "Based on my analysis, I would recommend...",
+                    "Let me break this down for you...",
+                ];
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                resolve(`${randomResponse} (Responding to: ${userMessage})`);
+            }, 1000);
+        });
+    };
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!input.trim()) return;
+
+        // Add user message
+        const userMessage: Message = {
+            id: Date.now().toString(),
+            content: input.trim(),
+            role: 'user',
+        };
+        setMessages(prev => [...prev, userMessage]);
+        setInput('');
         setIsTyping(true);
+
         try {
-            await handleSubmit(e);
+            // Get AI response
+            const response = await generateResponse(input.trim());
+            const aiMessage: Message = {
+                id: (Date.now() + 1).toString(),
+                content: response,
+                role: 'assistant',
+            };
+            setMessages(prev => [...prev, aiMessage]);
         } catch (error) {
-            console.error('Error submitting message:', error);
+            console.error('Error generating response:', error);
         } finally {
             setIsTyping(false);
         }
@@ -52,7 +96,7 @@ export default function Chat() {
                     </ScrollArea>
                 </CardContent>
                 <CardFooter>
-                    <form onSubmit={onSubmit} className="flex w-full space-x-2">
+                    <form onSubmit={handleSubmit} className="flex w-full space-x-2">
                         <Input
                             value={input}
                             onChange={handleInputChange}
