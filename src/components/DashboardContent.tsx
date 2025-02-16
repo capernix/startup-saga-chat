@@ -1,18 +1,19 @@
-
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useLocation } from "react-router-dom";
 
-export function DashboardContent() {
+export function DashboardContent({ children }: { children?: React.ReactNode }) {
+  const location = useLocation();
+  const title = location.pathname.split('/')[1] || 'Dashboard';
+
   return (
-    <main className="flex-1 overflow-auto">
-      <div className="p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <SidebarTrigger />
+      <main className="flex-1 overflow-auto">
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-3xl font-bold capitalize">{title}</h1>
+            <SidebarTrigger />
+          </div>
+          {children}
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Dashboard content will be replaced by router content */}
-        </div>
-      </div>
-    </main>
+      </main>
   );
 }
